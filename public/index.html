@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간호학생용 주사 실습 학습 앱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #FFF;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 375px;
+            margin: 0 auto;
+            background-color: #FFF;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .user-info h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .user-info p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .notification-btn {
+            font-size: 24px;
+            padding: 8px;
+            cursor: pointer;
+        }
+        
+        .progress-section {
+            padding: 24px 20px;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .step-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #E0E0E0;
+            margin: 0 auto 8px;
+        }
+        
+        .step.completed .step-circle {
+            background-color: #9C27B0;
+        }
+        
+        .step.current .step-circle {
+            background-color: #9C27B0;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .step-text {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .step.current .step-text {
+            color: #9C27B0;
+            font-weight: 600;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #9C27B0;
+            width: 75%;
+            border-radius: 4px;
+        }
+        
+        .section {
+            margin: 24px 20px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .more-link {
+            font-size: 14px;
+            color: #9C27B0;
+            text-decoration: none;
+        }
+        
+        .cards-container {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .card {
+            flex: 1;
+            background-color: #F8F9FA;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .arrow {
+            font-size: 20px;
+            color: #666;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 60px;
+            gap: 2px;
+        }
+        
+        .bar {
+            flex: 1;
+            background-color: #9C27B0;
+            border-radius: 4px;
+            min-height: 4px;
+        }
+        
+        .circular-chart {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+        }
+        
+        .circular-progress {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 6px solid #E0E0E0;
+            border-top-color: #9C27B0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-90deg);
+        }
+        
+        .score-text {
+            transform: rotate(90deg);
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .learning-item {
+            display: flex;
+            align-items: center;
+            background-color: #F8F9FA;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .learning-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        
+        .learning-content {
+            flex: 1;
+        }
+        
+        .learning-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .learning-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .evaluation-section {
+            background-color: #F8F9FA;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .evaluation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .evaluation-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        
+        .evaluation-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .evaluation-points {
+            list-style: none;
+        }
+        
+        .evaluation-points li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .bullet {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #9C27B0;
+            margin-top: 6px;
+            margin-right: 12px;
+        }
+        
+        .bullet.warning {
+            background-color: #FF9800;
+        }
+        
+        .point-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+            line-height: 20px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin: 24px 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: #9C27B0;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: #333;
+            border: 1px solid #E0E0E0;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            background-color: white;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 20px;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .nav-item.active .nav-icon {
+            opacity: 1;
+        }
+        
+        .nav-item:not(.active) .nav-icon {
+            opacity: 0.5;
+        }
+        
+        .content {
+            padding-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Header -->
+            <div class="header">
+                <div class="user-info">
+                    <h1>김O윤</h1>
+                    <p>202291930</p>
+                </div>
+                <div class="notification-btn">🔔</div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="steps">
+                    <div class="step completed">
+                        <div class="step-circle"></div>
+                        <div class="step-text">물품 준비</div>
+                    </div>
+                    <div class="step current">
+                        <div class="step-circle"></div>
+                        <div class="step-text">주사 부위 선정</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-circle"></div>
+                        <div class="step-text">약물 투약</div>
+                    </div>
+                </div>
+                
+                <div class="progress-info">
+                    <span>6/10 진행도</span>
+                    <span style="color: #9C27B0; font-weight: 600;">75%</span>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Grade Summary -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">성적 요약</h2>
+                    <a href="#" class="more-link">더보기</a>
+                </div>
+                
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">항목별 총점</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 60%;"></div>
+                            <div class="bar" style="height: 80%;"></div>
+                            <div class="bar" style="height: 70%;"></div>
+                            <div class="bar" style="height: 90%;"></div>
+                            <div class="bar" style="height: 85%;"></div>
+                            <div class="bar" style="height: 75%;"></div>
+                            <div class="bar" style="height: 80%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">항목별 총점</span>
+                            <span class="arrow">›</span>
+                        </div>
+                        <div class="circular-chart">
+                            <div class="circular-progress">
+                                <div class="score-text">80점</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Learning -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">추천 학습</h2>
+                    <a href="#" class="more-link">더보기</a>
+                </div>
+                
+                <div class="learning-item">
+                    <div class="learning-icon">📅</div>
+                    <div class="learning-content">
+                        <div class="learning-title">IM Injection Step 2</div>
+                        <div class="learning-subtitle">반복 학습 권장</div>
+                    </div>
+                    <div class="arrow">›</div>
+                </div>
+                
+                <div class="learning-item">
+                    <div class="learning-icon">📅</div>
+                    <div class="learning-content">
+                        <div class="learning-title">IM Injection Step 3</div>
+                        <div class="learning-subtitle">반복 학습 권장</div>
+                    </div>
+                    <div class="arrow">›</div>
+                </div>
+                
+                <div class="learning-item">
+                    <div class="learning-icon">📅</div>
+                    <div class="learning-content">
+                        <div class="learning-title">IM Injection Step 4</div>
+                        <div class="learning-subtitle">반복 학습 권장</div>
+                    </div>
+                    <div class="arrow">›</div>
+                </div>
+            </div>
+
+            <!-- Evaluation Details -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">평가 세부 내용</h2>
+                    <a href="#" class="more-link">더보기</a>
+                </div>
+                
+                <div class="evaluation-section">
+                    <div class="evaluation-header">
+                        <div class="evaluation-icon">✅</div>
+                        <div class="evaluation-title">강점</div>
+                    </div>
+                    <ul class="evaluation-points">
+                        <li>
+                            <div class="bullet"></div>
+                            <div class="point-text">정확한 물품을 준비하였습니다.</div>
+                        </li>
+                        <li>
+                            <div class="bullet"></div>
+                            <div class="point-text">무균술에 대한 문제를 모두 맞췄습니다.</div>
+                        </li>
+                        <li>
+                            <div class="bullet"></div>
+                            <div class="point-text">안전한 간호를 제공하였습니다.</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="evaluation-section">
+                    <div class="evaluation-header">
+                        <div class="evaluation-icon">⚠️</div>
+                        <div class="evaluation-title">보완점</div>
+                    </div>
+                    <ul class="evaluation-points">
+                        <li>
+                            <div class="bullet warning"></div>
+                            <div class="point-text">주사부위에 대한 정확한 지식이 필요합니다.</div>
+                        </li>
+                        <li>
+                            <div class="bullet warning"></div>
+                            <div class="point-text">해부학적 위치에대한 사전학습이 필요합니다.</div>
+                        </li>
+                        <li>
+                            <div class="bullet warning"></div>
+                            <div class="point-text">주사 약물 준비에 대한 연습이 필요합니다.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary">다시 학습하기</button>
+                <button class="btn btn-secondary">교수자 피드백 확인</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">📊</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">💬</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">⚙️</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 간단한 인터랙션 추가
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('버튼이 클릭되었습니다: ' + this.textContent);
+            });
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
